@@ -77,22 +77,39 @@ class processCamera(QWidget):
             pass
 
     def sendINMySQL(self, licenses):
-        infor= []
+        infor_realtime= []
+        infor_data= []
         time, day= self.getTime()
         """print(time)
         print(day)"""
-        infor.append(time)
-        infor.append(day)
-        infor.append(licenses)
-        sql= IN_SQL(infor)
-        sql.public()
-        self.exit()
+        infor_realtime.append(time)
+        infor_realtime.append(day)
+        infor_realtime.append(licenses)
 
-    def sendOUTMySQL(self, licenses):
-        sql= OUT_SQL(licenses)
-        sql.public()
+        infor_data.append(time)
+        infor_data.append(day)
+        infor_data.append(licenses)
+        infor_data.append("IN")
+
+        sql= IN_SQL(infor_realtime, infor_data)
+        sql.public_realtime()
+        sql.public_data()
+
         self.exit()
-        
+    
+    def sendOUTMySQL(self, licenses):
+        infor_data= []
+        time, day= self.getTime()
+        infor_data.append(time)
+        infor_data.append(day)
+        infor_data.append(licenses)
+        infor_data.append("OUT")
+
+        sql= OUT_SQL(licenses, infor_data)
+        sql.Search()
+        sql.public_data()
+        self.exit()    
+
     def getTime(self):
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
@@ -113,6 +130,7 @@ class processImage(QWidget):
         self.setWindowTitle('Xu ly image')
         self.show()
         image= cv2.imread(path_img)
+        image = cv2.resize(image, (800,600))
         process= yolotiny(image)
         licenses, result_arr = process.cut_plate()
         print(licenses)

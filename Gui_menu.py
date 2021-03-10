@@ -35,7 +35,7 @@ class VideoThread(QThread):
 class App(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.title= "Detect license plate"
+        self.title= "Detect license plate"      
         self.left= 10
         self.top= 10
         self.height= 768
