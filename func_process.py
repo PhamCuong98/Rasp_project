@@ -93,7 +93,10 @@ class yolotiny(object):
                     class_ids.append(class_id)
                     confidences.append(float(confidence))
                     boxes.append([x, y, w, h])
-
+        x=0
+        y=0
+        w=0
+        h=0
         indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
         for i in indices:
             i = i[0]
@@ -122,7 +125,7 @@ class yolotiny(object):
             key=lambda b:b[1][i], reverse=reverse))
         return contours, boundingBoxes
 
-    def cut_plate(self):
+    def cut_plate(self, top, left, bottom, right):
         top, left, bottom, right= self.process_plate(self.image)
         pts1= np.float32([[left, top], [right,top], [left, bottom], [right, bottom]])
         pts2= np.float32([[0, 0], [600,0], [0, 300], [600, 300]])
@@ -172,12 +175,6 @@ class yolotiny(object):
             licenses = " ".join(num)
         """print(licenses)"""
         return licenses, thresh2_2
-
-"""    def test_cut(self):
-        top, left, bottom, right = self.process_plate(self.image):
-        if top != 0 and left != 0 and bottom != 0 and right != 0:
-            """
-
 
 """path="1070.jpg"
 image = cv2.imread(path)
