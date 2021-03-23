@@ -17,7 +17,7 @@ class IN_SQL(object):
     def public_realtime(self):
         self.mydb= mysql.connector.connect(host=host, user=user, password=password, database= database)
         self.mycursor= self.mydb.cursor()
-        sql= "INSERT INTO realtime (time, day, number) VALUES (%s, %s, %s)"
+        sql= "INSERT INTO realtime (time, day, number, ID) VALUES (%s, %s, %s, %s)"
         self.mycursor.execute(sql, self.infor)
         self.mydb.commit()
         print(self.mycursor.rowcount, "Da Insert")
@@ -25,7 +25,7 @@ class IN_SQL(object):
     def public_data(self):
         self.mydb= mysql.connector.connect(host=host, user=user, password=password, database= database)
         self.mycursor= self.mydb.cursor()
-        sql= "INSERT INTO data (time, day, number, status) VALUES (%s, %s, %s, %s)"
+        sql= "INSERT INTO data (time, day, number, status, ID) VALUES (%s, %s, %s, %s, %s)"
         self.mycursor.execute(sql, self.data)
         self.mydb.commit()
         print(self.mycursor.rowcount, "Da Insert")
@@ -41,19 +41,23 @@ class OUT_SQL(object):
         sql_search = "SELECT * FROM realtime WHERE number = '"+ str(self.infor)+ "'"
         self.mycursor.execute(sql_search)
         myresult = self.mycursor.fetchall()
-
+        notice=[]
         if myresult == []:
             print("ko tim thay")
+            notice= "Khong tim thay"
+            return notice
         else:
             sql_delete = "DELETE FROM realtime WHERE number = '" + str(self.infor)+ "'"
             self.mycursor.execute(sql_delete)
             self.mydb.commit()
             print(self.mycursor.rowcount, "Da Delete")
+            notice= "Da Xoa"
+            return notice
     
     def public_data(self):
         self.mydb= mysql.connector.connect(host=host, user=user, password=password, database= database)
         self.mycursor= self.mydb.cursor()
-        sql= "INSERT INTO data (time, day, number, status) VALUES (%s, %s, %s, %s)"
+        sql= "INSERT INTO data (time, day, number, status, ID) VALUES (%s, %s, %s, %s, %s)"
         self.mycursor.execute(sql, self.data)
         self.mydb.commit()
         print(self.mycursor.rowcount, "Da Insert")

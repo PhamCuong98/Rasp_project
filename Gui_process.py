@@ -9,6 +9,12 @@ import numpy as np
 from func_process import yolotiny
 from process_MySQL import IN_SQL, OUT_SQL
 from datetime import datetime
+import time
+import serial
+
+ser = serial.Serial('/dev/ttyUSB0', 9600)
+print(ser.name)         # check which port was really used
+
 class processCamera(QWidget):
     def __init__(self, npImage):
         super().__init__()
@@ -75,40 +81,58 @@ class processCamera(QWidget):
             self.close()
         else:
             pass
-
+        
+    def NoteOutMysql(self, message):
+        print("xuat note mysql")
+        QMessageBox.about(self, "Thong bao tu Mysql", message)
+    
     def sendINMySQL(self, licenses):
         infor_realtime= []
         infor_data= []
         time, day= self.getTime()
         """print(time)
         print(day)"""
+        ID=""
+        ID = ser.readline().decode('UTF-8')
+        print("RFID: "+ str(ID))
         infor_realtime.append(time)
         infor_realtime.append(day)
         infor_realtime.append(licenses)
+        infor_realtime.append(ID)
 
         infor_data.append(time)
         infor_data.append(day)
         infor_data.append(licenses)
         infor_data.append("IN")
+        infor_data.append(ID)
 
         sql= IN_SQL(infor_realtime, infor_data)
         sql.public_realtime()
         sql.public_data()
-
-        self.exit()
+        self.close()
+        #self.exit()
     
     def sendOUTMySQL(self, licenses):
         infor_data= []
+        notice=[]
         time, day= self.getTime()
+        ID=""
+        ID = ser.readline().decode('UTF-8')
+        print("RFID: "+ str(ID))
         infor_data.append(time)
         infor_data.append(day)
         infor_data.append(licenses)
         infor_data.append("OUT")
+        infor_data.append(ID)
 
         sql= OUT_SQL(licenses, infor_data)
-        sql.Search()
+        notice= sql.Search()
+        print("test note gui")
+        print(notice)
+        self.NoteOutMysql(notice)
         sql.public_data()
-        self.exit()    
+        self.close()
+        #self.exit()    
 
     def getTime(self):
         now = datetime.now()
@@ -129,6 +153,7 @@ class processImage(QWidget):
         #self.setGeometry( 300, 300, 350, 300 )
         self.setWindowTitle('Xu ly image')
         self.show()
+        
         image= cv2.imread(path_img)
         image = cv2.resize(image, (800,600))
         process= yolotiny(image)
@@ -182,47 +207,64 @@ class processImage(QWidget):
         print("PhamCuong_1st")
         reply = QMessageBox.question(
             self, "Message",
-            "Are you sure you want to quit? Any unsaved work will be lost.",
+            "Bạn muốn thoát?.",
             QMessageBox.Close | QMessageBox.Cancel)
 
         if reply == QMessageBox.Close:
             self.close()
         else:
             pass
-
+    
+    def NoteOutMysql(self, message):
+        print("xuat note mysql")
+        QMessageBox.about(self, "Thong bao tu Mysql", message)
+        
     def sendINMySQL(self, licenses):
         infor_realtime= []
         infor_data= []
         time, day= self.getTime()
         """print(time)
         print(day)"""
+        ID=""
+        ID = ser.readline().decode('UTF-8')
+        print("RFID: "+ str(ID))
         infor_realtime.append(time)
         infor_realtime.append(day)
         infor_realtime.append(licenses)
+        infor_realtime.append(ID)
 
         infor_data.append(time)
         infor_data.append(day)
         infor_data.append(licenses)
         infor_data.append("IN")
+        infor_data.append(ID)
 
         sql= IN_SQL(infor_realtime, infor_data)
         sql.public_realtime()
         sql.public_data()
-
-        self.exit()
+        self.close()
+        #self.exit()
     
     def sendOUTMySQL(self, licenses):
         infor_data= []
+        notice=[]
+        ID = ser.readline().decode('UTF-8')
+        pprint("RFID: "+ str(ID))
         time, day= self.getTime()
         infor_data.append(time)
         infor_data.append(day)
         infor_data.append(licenses)
         infor_data.append("OUT")
+        infor_data.append(ID)
 
         sql= OUT_SQL(licenses, infor_data)
-        sql.Search()
+        notice= sql.Search()
+        print("test note gui")
+        print(notice)
+        self.NoteOutMysql(notice)
         sql.public_data()
-        self.exit()
+        self.close()
+        #self.exit()
         
     def getTime(self):
         now = datetime.now()
