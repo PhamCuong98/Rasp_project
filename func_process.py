@@ -142,35 +142,42 @@ class yolotiny(object):
 
         for contour in contours_sort:
             x, y, w, h = contourRect = cv2.boundingRect(contour)
+            print("\nchua loc")
+            print("Trong so x, y, w, h")
+            print(x, y, w, h)
             ratio= h/w
-            if 1.6<=ratio<=5:
-                if 1.6< thresh2_2.shape[0]/h< 3 :
-                    print("Trong so")
+            if 2<=ratio<=8:
+                if 1.6< thresh2_2.shape[0]/h< 3 and h>100 :
+                    print("\nDa loc")
+                    print("Trong so x, y, w, h, thresh_shape[0]")
                     print(x, y, w, h, thresh2_2.shape[0])
                     countContours += 1
                     #cv2.rectangle(result_bird, (x, y), (x + w, y + h), (0, 255, 0))
                     box_img= thresh2_2[y:y+h,x:x+w]
                     boxes.append(box_img)
         print("So contour tim dc: ", countContours)
-        
-        num=[]
-        licenses=[]
-        label_data= ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C','D', 'E', 'F', 'G', 'H', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z', 'None']
-        for i in range(countContours):
-            #print(str(boxes[i].shape))
-            #cv2.imwrite("boxes"+str(i)+".jpg", boxes[i])
-            #plt.subplot(1, countContours, i+1), plt.imshow(boxes[i], 'gray') 
-            box_img= cv2.resize(boxes[i], (38,38))
+        if len(boxes)==0:
+            licenses= "Khong tim thay"
+            return licenses, thresh2_2
+        else:
+            num=[]
+            licenses=[]
+            label_data= ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C','D', 'E', 'F', 'G', 'H', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z', 'None']
+            for i in range(countContours):
+                #print(str(boxes[i].shape))
+                #cv2.imwrite("boxes"+str(i)+".jpg", boxes[i])
+                #plt.subplot(1, countContours, i+1), plt.imshow(boxes[i], 'gray') 
+                box_img= cv2.resize(boxes[i], (38,38))
 
-            box_img_3=np.stack((box_img,)*3, -1)
-            test= box_img_3.reshape(1,38,38,3)
-            predict= model.predict(test)
-            value= np.argmax(predict)
-            #if value <31:
-            num.append(label_data[value])
-            licenses = " ".join(num)
-        """print(licenses)"""
-        return licenses, thresh2_2
+                box_img_3=np.stack((box_img,)*3, -1)
+                test= box_img_3.reshape(1,38,38,3)
+                predict= model.predict(test)
+                value= np.argmax(predict)
+                #if value <31:
+                num.append(label_data[value])
+                licenses = " ".join(num)
+            """print(licenses)"""
+            return licenses, thresh2_2
 
 """path="1070.jpg"
 image = cv2.imread(path)

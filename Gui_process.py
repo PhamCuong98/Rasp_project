@@ -10,10 +10,10 @@ from func_process import yolotiny
 from process_MySQL import IN_SQL, OUT_SQL
 from datetime import datetime
 import time
-import serial
+"""import serial
 
 ser = serial.Serial('/dev/ttyUSB0', 9600)
-print(ser.name)         # check which port was really used
+print(ser.name)         # check which port was really used"""
 
 class processCamera(QWidget):
     def __init__(self, npImage):
@@ -104,7 +104,7 @@ class processCamera(QWidget):
         """print(time)
         print(day)"""
         ID=""
-        ID = ser.readline().decode('UTF-8')
+        """ID = ser.readline().decode('UTF-8')"""
         print("RFID: "+ str(ID))
         infor_realtime.append(time)
         infor_realtime.append(day)
@@ -129,7 +129,7 @@ class processCamera(QWidget):
         notice=[]
         time, day= self.getTime()
         ID=""
-        ID = ser.readline().decode('UTF-8')
+        """ID = ser.readline().decode('UTF-8')"""
         print("RFID: "+ str(ID))
         infor_data.append(time)
         infor_data.append(day)
@@ -238,7 +238,7 @@ class processImage(QWidget):
         """print(time)
         print(day)"""
         ID=""
-        ID = ser.readline().decode('UTF-8')
+        """ID = ser.readline().decode('UTF-8')"""
         print("RFID: "+ str(ID))
         infor_realtime.append(time)
         infor_realtime.append(day)
@@ -260,7 +260,7 @@ class processImage(QWidget):
     def sendOUTMySQL(self, licenses):
         infor_data= []
         notice=[]
-        ID = ser.readline().decode('UTF-8')
+        """ID = ser.readline().decode('UTF-8')"""
         print("RFID: "+ str(ID))
         time, day= self.getTime()
         infor_data.append(time)

@@ -3,7 +3,7 @@ import mysql.connector
 host= "123.19.252.125"
 user= "root"
 password= "Ngoccuong@1812"
-database= "mydatabase"""" 
+database= "mydatabase"""
 
 host= "localhost"
 user= "root"
