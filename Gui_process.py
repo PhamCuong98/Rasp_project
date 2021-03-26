@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui,QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtWidgets import (QDialog ,QMessageBox, QApplication,QWidget, QMainWindow, QLabel, QVBoxLayout, QHBoxLayout, QGroupBox, QPushButton)
 from PIL import Image, ImageFont, ImageDraw
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import sys
 import cv2
 import numpy as np
@@ -18,6 +18,7 @@ print(ser.name)         # check which port was really used
 class processCamera(QWidget):
     def __init__(self, npImage):
         super().__init__()
+        #Input: array of image read from cv2.
         self.np_Image= npImage
         self.show()
 
@@ -26,11 +27,13 @@ class processCamera(QWidget):
         self.setWindowTitle( 'Review' )
         self.show()
 
+        #class of Func_process.py. 
         process= yolotiny(np_Image)
         licenses, result_arr = process.cut_plate()
         """print(licenses)
         print(result_arr.shape)"""
 
+        # Show image capture, what was choose to process
         self.horizontalLayout = QHBoxLayout()
         qimage1 = QImage(np_Image, np_Image.shape[1], np_Image.shape[0], QImage.Format_RGB888)   
         pic = QPixmap(qimage1)
@@ -39,6 +42,7 @@ class processCamera(QWidget):
         label.resize(300,200)
         self.horizontalLayout.addWidget(label)
 
+        # Show plate after process
         result_arr_3=np.stack((result_arr,)*3, -1)
         qimage2 = QImage(result_arr_3, result_arr_3.shape[1], result_arr_3.shape[0], QImage.Format_RGB888)                                                                                                                                                         
         yolo = QPixmap(qimage2)
@@ -47,6 +51,7 @@ class processCamera(QWidget):
         label_yolo.resize(300,200)
         self.horizontalLayout.addWidget(label_yolo)
 
+        # Button to select choose
         self.horizontalLayout2 = QHBoxLayout()
         cancel = QPushButton('Cancel')
         cancel.clicked.connect(lambda:self.exit())
@@ -58,6 +63,7 @@ class processCamera(QWidget):
         self.horizontalLayout2.addWidget(sendIN)
         self.horizontalLayout2.addWidget(sendOUT)
 
+        # Label to show result: Output
         self.verticalLayout = QVBoxLayout()
         text1= QLabel("Ket qua")
         text1.move(200,200)
@@ -66,11 +72,14 @@ class processCamera(QWidget):
         self.verticalLayout.addWidget(text1)
         self.verticalLayout.addWidget(text2)
 
+        # Connect widget to GUI
         self.verticalEnd = QVBoxLayout(self)
         self.verticalEnd.addLayout(self.horizontalLayout)
         self.verticalEnd.addLayout(self.horizontalLayout2)
         self.verticalEnd.addLayout(self.verticalLayout)
         self.setLayout(self.verticalEnd)
+
+    # Func exit-connect with button Cancel
     def exit(self):
         reply = QMessageBox.question(
             self, "Message",
@@ -81,13 +90,15 @@ class processCamera(QWidget):
             self.close()
         else:
             pass
-        
+
+    # Message show information of mysql    
     def NoteOutMysql(self, message):
-        print("xuat note mysql")
+        #print("xuat note mysql")
         QMessageBox.about(self, "Thong bao tu Mysql", message)
     
+    # Func send infor - connect with button "IN"
     def sendINMySQL(self, licenses):
-        infor_realtime= []
+        infor_realtime= []  
         infor_data= []
         time, day= self.getTime()
         """print(time)
@@ -112,6 +123,7 @@ class processCamera(QWidget):
         self.close()
         #self.exit()
     
+    # Func send infor - connect with button "OUT"
     def sendOUTMySQL(self, licenses):
         infor_data= []
         notice=[]
@@ -249,7 +261,7 @@ class processImage(QWidget):
         infor_data= []
         notice=[]
         ID = ser.readline().decode('UTF-8')
-        pprint("RFID: "+ str(ID))
+        print("RFID: "+ str(ID))
         time, day= self.getTime()
         infor_data.append(time)
         infor_data.append(day)

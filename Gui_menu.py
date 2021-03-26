@@ -19,7 +19,7 @@ class VideoThread(QThread):
 
     def run(self):
 
-        cap = cv2.VideoCapture(2)
+        cap = cv2.VideoCapture(0)
         while self._run_flag:
             ret, cv_img = cap.read()
             if ret:
@@ -64,7 +64,7 @@ class App(QMainWindow):
 class MyTableWidge(QWidget):
     def __init__(self, parent):
         super(QWidget, self).__init__(parent)
-        self.disply_width = 600
+        self.disply_width = 800
         self.display_height = 900
 
         self.layout= QVBoxLayout(self) #Layout chinh cua Widget
