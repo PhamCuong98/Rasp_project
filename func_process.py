@@ -75,7 +75,10 @@ class yolotiny(object):
         boxes = []
         conf_threshold = 0.5
         nms_threshold = 0.4
-
+        x=0
+        y=0
+        w=0
+        h=0
         # Thực hiện xác định bằng HOG và SVM
         start = time.time()
         for out in outs:
@@ -123,6 +126,9 @@ class yolotiny(object):
 
     def cut_plate(self):
         top, left, bottom, right= self.process_plate(self.image)
+        if top==0 and left==0 and bottom==0 and right==0:
+            licenses= "Khong tim thay"
+            return licenses, self.image
         pts1= np.float32([[left, top], [right,top], [left, bottom], [right, bottom]])
         pts2= np.float32([[0, 0], [600,0], [0, 300], [600, 300]])
         img_bird= cv2.getPerspectiveTransform(pts1, pts2)
@@ -142,9 +148,9 @@ class yolotiny(object):
 
         for contour in contours_sort:
             x, y, w, h = contourRect = cv2.boundingRect(contour)
-            print("\nchua loc")
+            """print("\nchua loc")
             print("Trong so x, y, w, h")
-            print(x, y, w, h)
+            print(x, y, w, h)"""
             ratio= h/w
             if 2<=ratio<=8:
                 if 1.6< thresh2_2.shape[0]/h< 3 and h>100 :

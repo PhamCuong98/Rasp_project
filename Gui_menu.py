@@ -131,6 +131,7 @@ class MyTableWidge(QWidget):
         #self.click()
         self.thread.change_pixmap_signal.connect(self.get_img)
         self.thread.stop()
+        self.pushbutton1Tab1.setEnabled(True)
         
     def openCamera(self):
         self.thread = VideoThread()
@@ -138,9 +139,10 @@ class MyTableWidge(QWidget):
         self.thread.change_pixmap_signal.connect(self.update_image)
         # start the thread
         self.thread.start()
+        self.pushbutton1Tab1.setEnabled(False)
 
-    """def click(self):
-        print("PhamCuong_1st")"""
+    def click(self):
+        print("PhamCuong_1st")
 
     def get_img(self, cv_img):
         #print(type(cv_img))

@@ -1,0 +1,9 @@
+GUI_process:
+tensorflow
+pyqt5
+flask-mysql
+keras
+mysql-connector-python
+numpy
+pyserial
+opencv-python
