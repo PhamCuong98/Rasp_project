@@ -28,7 +28,8 @@ class processCamera(QWidget):
         self.show()
 
         #class of Func_process.py. 
-        process= yolotiny(np_Image)
+        image = cv2.resize(np_Image, (800,600))
+        process= yolotiny(image)
         licenses, result_arr = process.cut_plate()
         """print(licenses)
         print(result_arr.shape)"""

@@ -19,7 +19,7 @@ class VideoThread(QThread):
 
     def run(self):
 
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(2)
         while self._run_flag:
             ret, cv_img = cap.read()
             if ret:
@@ -183,6 +183,6 @@ def main():
     ex= App()
     ex.show()
     sys.exit(app.exec_())
-
+ 
 if __name__== '__main__':
     main()

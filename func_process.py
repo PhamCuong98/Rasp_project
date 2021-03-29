@@ -136,7 +136,7 @@ class yolotiny(object):
         #cv2.imshow("cat", result_bird)
 
         image_split= cv2.cvtColor(result_bird, cv2.COLOR_BGR2GRAY)
-        ret, thresh2= cv2.threshold(image_split, 125, 255, cv2.THRESH_BINARY)
+        ret, thresh2= cv2.threshold(image_split, 100, 255, cv2.THRESH_BINARY)
         cv2.floodFill(thresh2, None, (0,0), 255)
         thresh_blur = cv2.medianBlur(thresh2, 5)
         thresh2_2 = cv2.bitwise_not(thresh_blur)
@@ -145,6 +145,16 @@ class yolotiny(object):
         boxes=[]
 
         contours_sort, boundingBoxes = self.sort_contours(contours)
+        h_list=[]
+        for contour in contours_sort:
+            x, y, w, h = contourRect = cv2.boundingRect(contour)
+            ratio= h/w
+            if 2<=ratio<=8:
+                if 1.6< thresh2_2.shape[0]/h< 3 and h>100 :
+                    h_list.append(h)
+        h_avg= sum(h_list)/len(h_list)
+        """print(max(h_list))
+        print(h_avg)"""
 
         for contour in contours_sort:
             x, y, w, h = contourRect = cv2.boundingRect(contour)
@@ -153,7 +163,7 @@ class yolotiny(object):
             print(x, y, w, h)"""
             ratio= h/w
             if 2<=ratio<=8:
-                if 1.6< thresh2_2.shape[0]/h< 3 and h>100 :
+                if 1.6< thresh2_2.shape[0]/h< 3 and 0.9<=h/h_avg<=1.1 :
                     print("\nDa loc")
                     print("Trong so x, y, w, h, thresh_shape[0]")
                     print(x, y, w, h, thresh2_2.shape[0])
