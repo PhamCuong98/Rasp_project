@@ -38,16 +38,26 @@ class OUT_SQL(object):
         self.mydb= mysql.connector.connect(host=host, user=user, password=password, database= database)
         self.mycursor= self.mydb.cursor()
         myresult= []
-        sql_search = "SELECT * FROM realtime WHERE number = '"+ str(self.infor)+ "'"
+        licenses= self.infor[0]
+        RFID= self.infor[1]
+        print(licenses)
+        sql_search = "SELECT * FROM realtime WHERE ID = '" + str(RFID)+ "'"
         self.mycursor.execute(sql_search)
         myresult = self.mycursor.fetchall()
-        notice=[]
+        print(myresult)
+        print(myresult[0][2])
+
         if myresult == []:
             print("ko tim thay")
-            notice= "Khong tim thay"
+            notice= "The RFID chua gan infor"
+            return notice
+
+        elif licenses != myresult[0][2]:
+            print("khong tim thay")
+            notice= "Sai Xe - Kiem tra lai"
             return notice
         else:
-            sql_delete = "DELETE FROM realtime WHERE number = '" + str(self.infor)+ "'"
+            sql_delete = "DELETE FROM realtime WHERE number = '" + str(licenses)+ "'"
             self.mycursor.execute(sql_delete)
             self.mydb.commit()
             print(self.mycursor.rowcount, "Da Delete")
