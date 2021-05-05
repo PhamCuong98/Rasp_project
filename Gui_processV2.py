@@ -12,9 +12,6 @@ from datetime import datetime
 import time
 import serial
 
-ser = serial.Serial('/dev/ttyUSB0', 9600)
-print(ser.name)         # check which port was really used
-
 class processCamera(QWidget):
     def __init__(self, npImage, note):
         super().__init__()
@@ -73,7 +70,7 @@ class processCamera(QWidget):
         text2.move(250,200)
         self.verticalLayout.addWidget(text1)
         self.verticalLayout.addWidget(text2)
-
+        
         # Connect widget to GUI
         self.verticalEnd = QVBoxLayout(self)
         self.verticalEnd.addLayout(self.horizontalLayout)
@@ -93,20 +90,17 @@ class processCamera(QWidget):
         else:
             pass
 
-    # Message show information of mysql    
-    def NoteOutMysql(self, message):
-        #print("xuat note mysql")
-        QMessageBox.about(self, "Thong bao tu Mysql", message)
     
     # Func send infor - connect with button "IN"
     def sendINMySQL(self, licenses):
         infor_realtime= []  
         infor_data= []
         time, day= self.getTime()
-        """print(time)
-        print(day)"""
+        ser = serial.Serial('/dev/ttyUSB1', 9600, rtscts=True,dsrdtr=True)
+        print(ser.name)         # check which port was really used
         ID=""
         ID = ser.readline().decode('UTF-8')
+        ser.close()
         print("RFID: "+ str(ID))
         infor_realtime.append(time)
         infor_realtime.append(day)
@@ -122,17 +116,22 @@ class processCamera(QWidget):
         sql= IN_SQL(infor_realtime, infor_data)
         sql.public_realtime()
         sql.public_data()
+        message= str(licenses)+" - "+str(ID)
+        self.NoteMysql(message)
         self.close()
         #self.exit()
-    
+
     # Func send infor - connect with button "OUT"
     def sendOUTMySQL(self, licenses):
         infor_real=[]
         infor_data= []
         notice=[]
         time, day= self.getTime()
+        ser = serial.Serial('/dev/ttyUSB1', 9600, rtscts=True,dsrdtr=True)
+        print(ser.name)         # check which port was really used
         ID=""
         ID = ser.readline().decode('UTF-8')
+        ser.close()
         print("RFID: "+ str(ID))
         infor_real.append(licenses)
         infor_real.append(ID)
@@ -145,11 +144,15 @@ class processCamera(QWidget):
 
         sql= OUT_SQL(infor_real, infor_data)
         notice= sql.Search()
-        print(notice)
-        self.NoteOutMysql(notice)
+        message= str(licenses) +"-"+str(licenses)+" - "+notice
+        self.NoteMysql(message)
         sql.public_data()
         self.close()
         #self.exit()    
+    # Message show information of mysql    
+    def NoteMysql(self, message):
+        #print("xuat note mysql")
+        QMessageBox.about(self, "Thong bao tu Mysql", message)
 
     def getTime(self):
         now = datetime.now()
@@ -232,19 +235,21 @@ class processImage(QWidget):
         else:
             pass
     
-    def NoteOutMysql(self, message):
+    def NoteMysql(self, message):
         print("xuat note mysql")
         QMessageBox.about(self, "Thong bao tu Mysql", message)
         
     def sendINMySQL(self, licenses):
+        ser = serial.Serial('/dev/ttyUSB1', 9600, rtscts=True,dsrdtr=True)
+        print(ser.name)         # check which port was really used
+        ID=""
+        ID = ser.readline().decode('UTF-8')
+        ser.close()
+        print("RFID: "+ str(ID))
         infor_realtime= []
         infor_data= []
         time, day= self.getTime()
-        """print(time)
-        print(day)"""
-        ID=""
-        ID = ser.readline().decode('UTF-8')
-        print("RFID: "+ str(ID))
+
         infor_realtime.append(time)
         infor_realtime.append(day)
         infor_realtime.append(licenses)
@@ -259,6 +264,8 @@ class processImage(QWidget):
         sql= IN_SQL(infor_realtime, infor_data)
         sql.public_realtime()
         sql.public_data()
+        message= str(licenses)+" - "+str(ID)
+        self.NoteMysql(message)
         self.close()
         #self.exit()
     
@@ -267,8 +274,11 @@ class processImage(QWidget):
         infor_data= []
         notice=[]
         time, day= self.getTime()
+        ser = serial.Serial('/dev/ttyUSB1', 9600, rtscts=True,dsrdtr=True)
+        print(ser.name)         # check which port was really used
         ID=""
         ID = ser.readline().decode('UTF-8')
+        ser.close()
         print("RFID: "+ str(ID))
         infor_real.append(licenses)
         infor_real.append(ID)
@@ -281,8 +291,8 @@ class processImage(QWidget):
 
         sql= OUT_SQL(infor_real, infor_data)
         notice= sql.Search()
-        print(notice)
-        self.NoteOutMysql(notice)
+        message= str(licenses) +"-"+str(licenses)+" - "+notice
+        self.NoteMysql(message)
         sql.public_data()
         self.close()
         #self.exit()

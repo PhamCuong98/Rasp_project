@@ -1,9 +1,11 @@
 import mysql.connector
-"""
-host= "123.19.252.125"
+import serial
+ser = serial.Serial('/dev/ttyUSB1', 9600)
+"""host= "123.19.175.154"
 user= "root"
 password= "Ngoccuong@1812"
-database= "mydatabase"""
+database= "mydatabase"
+"""
 
 host= "localhost"
 user= "root"
@@ -20,6 +22,13 @@ class IN_SQL(object):
         sql= "INSERT INTO realtime (time, day, number, ID) VALUES (%s, %s, %s, %s)"
         self.mycursor.execute(sql, self.infor)
         self.mydb.commit()
+
+        string_OUT= "IN"  #Xuat ra man hinh va doc string
+        string_OUT=string_OUT+"\r"                          #Cong them ki tu \r
+        ser.write(string_OUT.encode())
+        notice= "Da Them"
+        
+
         print(self.mycursor.rowcount, "Da Insert")
 
     def public_data(self):
@@ -41,11 +50,9 @@ class OUT_SQL(object):
         licenses= self.infor[0]
         RFID= self.infor[1]
         print(licenses)
-        sql_search = "SELECT * FROM realtime WHERE ID = '" + str(RFID)+ "'"
+        sql_search = "SELECT * FROM realtime WHERE ID = '" + str(RFID)+ "'" 
         self.mycursor.execute(sql_search)
         myresult = self.mycursor.fetchall()
-        print(myresult)
-        print(myresult[0][2])
 
         if myresult == []:
             print("ko tim thay")
@@ -61,6 +68,10 @@ class OUT_SQL(object):
             self.mycursor.execute(sql_delete)
             self.mydb.commit()
             print(self.mycursor.rowcount, "Da Delete")
+
+            string_OUT= "OUT"  #Xuat ra man hinh va doc string
+            string_OUT=string_OUT+"\r"                          #Cong them ki tu \r
+            ser.write(string_OUT.encode())
             notice= "Da Xoa"
             return notice
     
