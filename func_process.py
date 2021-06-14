@@ -1,20 +1,15 @@
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
-import time
-import cv2
-import argparse
-import numpy as np
-import matplotlib.pyplot as plt
+from src.config import *
 import tensorflow as tf
 from tensorflow.compat.v1.keras.models import load_model
 import keras
+
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.compat.v1.Session(config=config)
 keras.backend.set_session(sess)
 
 print(tf.__version__)
-model = load_model(r"Model/my_model.h5")
+model = load_model(MODEL)
 #model.summary()
 
 class yolotiny(object):
@@ -25,12 +20,9 @@ class yolotiny(object):
         ap = argparse.ArgumentParser()
         """ap.add_argument('-i', '--image', required=True,
                         help='path to input image')"""
-        ap.add_argument('-c', '--config', default='Source_rasp/yolo/yolov4-tiny-custom.cfg',
-                        help='path to yolo config file')
-        ap.add_argument('-w', '--weights', default='Source_rasp/yolo/yolov4-tiny-custom_last.weights',
-                        help='path to yolo pre-trained weights')
-        ap.add_argument('-cl', '--classes', default='Source_rasp/yolo/obj.names',
-                        help='path to text file containing class names')
+        ap.add_argument('-c', '--config', default=YOLO_CONFIG, help='path to yolo config file')
+        ap.add_argument('-w', '--weights', default=YOLO_WEIGHT, help='path to yolo pre-trained weights')
+        ap.add_argument('-cl', '--classes', default=YOLO_CLASSES, help='path to text file containing class names')
         args = ap.parse_args()
 
 
@@ -178,7 +170,7 @@ class yolotiny(object):
         else:
             num=[]
             licenses=[]
-            label_data= ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C','D', 'E', 'F', 'G', 'H', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z', 'None']
+            label_data= LABEL_DATA
             for i in range(countContours):
                 #print(str(boxes[i].shape))
                 #cv2.imwrite("boxes"+str(i)+".jpg", boxes[i])

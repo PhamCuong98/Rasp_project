@@ -1,6 +1,8 @@
 import mysql.connector
 import serial
-ser = serial.Serial('/dev/ttyUSB1', 9600)
+
+ser = serial.Serial(PORT_USB, 9600)
+
 """host= "123.19.175.154"
 user= "root"
 password= "Ngoccuong@1812"

@@ -1,15 +1,6 @@
-from PyQt5 import QtCore, QtGui,QtWidgets
-from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import (QDialog ,QMessageBox, QApplication,QWidget, QMainWindow, QLabel, QVBoxLayout, QHBoxLayout, QGroupBox, QPushButton)
-from PIL import Image, ImageFont, ImageDraw
-#import matplotlib.pyplot as plt
-import sys
-import cv2
-import numpy as np
+from src.config import *
 from func_process import yolotiny
 from process_MySQL import IN_SQL, OUT_SQL
-from datetime import datetime
-import time
 import serial
 
 class processCamera(QWidget):
@@ -26,7 +17,7 @@ class processCamera(QWidget):
         self.show()
 
         #class of Func_process.py. 
-        image = cv2.resize(np_Image, (800,600))
+        image = cv2.resize(np_Image, SIZE_IMAGE)
         process= yolotiny(image)
         licenses, result_arr = process.cut_plate()
         """print(licenses)
@@ -38,7 +29,7 @@ class processCamera(QWidget):
         pic = QPixmap(qimage1)
         label= QLabel()
         label.setPixmap(pic)
-        label.resize(300,200)
+        label.resize(WIDTH_YOLO, HEIGHT_YOLO)
         self.horizontalLayout.addWidget(label)
 
         # Show plate after process
@@ -47,7 +38,7 @@ class processCamera(QWidget):
         yolo = QPixmap(qimage2)
         label_yolo = QLabel()
         label_yolo.setPixmap(yolo)
-        label_yolo.resize(300,200)
+        label_yolo.resize(WIDTH_YOLO, HEIGHT_YOLO)
         self.horizontalLayout.addWidget(label_yolo)
 
         # Button to select choose
@@ -96,7 +87,7 @@ class processCamera(QWidget):
         infor_realtime= []  
         infor_data= []
         time, day= self.getTime()
-        ser = serial.Serial('/dev/ttyUSB1', 9600, rtscts=True,dsrdtr=True)
+        ser = serial.Serial(PORT_USB, 9600, rtscts=True,dsrdtr=True)
         print(ser.name)         # check which port was really used
         ID=""
         ID = ser.readline().decode('UTF-8')
@@ -127,7 +118,7 @@ class processCamera(QWidget):
         infor_data= []
         notice=[]
         time, day= self.getTime()
-        ser = serial.Serial('/dev/ttyUSB1', 9600, rtscts=True,dsrdtr=True)
+        ser = serial.Serial(PORT_USB, 9600, rtscts=True, dsrdtr=True)
         print(ser.name)         # check which port was really used
         ID=""
         ID = ser.readline().decode('UTF-8')
@@ -175,7 +166,7 @@ class processImage(QWidget):
         self.show()
         
         image= cv2.imread(path_img)
-        image = cv2.resize(image, (800,600))
+        image = cv2.resize(image, SIZE_IMAGE)
         process= yolotiny(image)
         licenses, result_arr = process.cut_plate()
         print(licenses)
@@ -187,7 +178,7 @@ class processImage(QWidget):
         pic = QPixmap(path_img)
         label= QLabel()
         label.setPixmap(pic)
-        label.resize(300,200)
+        label.resize(WIDTH_YOLO, HEIGHT_YOLO)
         self.horizontalLayout.addWidget(label)
 
         result_arr_3=np.stack((result_arr,)*3, -1)
@@ -195,7 +186,7 @@ class processImage(QWidget):
         yolo = QPixmap(qimage)
         label_yolo = QLabel()
         label_yolo.setPixmap(yolo)
-        #label_yolo.resize(300,200)
+        label_yolo.resize(WIDTH_YOLO, HEIGHT_YOLO)
         self.horizontalLayout.addWidget(label_yolo)
 
         self.horizontalLayout2 = QHBoxLayout()
@@ -240,7 +231,7 @@ class processImage(QWidget):
         QMessageBox.about(self, "Thong bao tu Mysql", message)
         
     def sendINMySQL(self, licenses):
-        ser = serial.Serial('/dev/ttyUSB1', 9600, rtscts=True,dsrdtr=True)
+        ser = serial.Serial(PORT_USB, 9600, rtscts=True, dsrdtr=True)
         print(ser.name)         # check which port was really used
         ID=""
         ID = ser.readline().decode('UTF-8')
@@ -274,7 +265,7 @@ class processImage(QWidget):
         infor_data= []
         notice=[]
         time, day= self.getTime()
-        ser = serial.Serial('/dev/ttyUSB1', 9600, rtscts=True,dsrdtr=True)
+        ser = serial.Serial(PORT_USB, 9600, rtscts=True, dsrdtr=True)
         print(ser.name)         # check which port was really used
         ID=""
         ID = ser.readline().decode('UTF-8')

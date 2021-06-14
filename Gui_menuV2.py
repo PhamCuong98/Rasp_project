@@ -1,13 +1,5 @@
-from PyQt5 import QtCore, QtGui,QtWidgets
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtWidgets import (QHBoxLayout, QDialog ,QApplication,QPushButton,QWidget, QMainWindow, 
-QMessageBox, QLineEdit,QTabWidget, QLabel, QAction, QVBoxLayout, QGroupBox, QFileDialog, QGridLayout)
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
+from src.config import *
 from Gui_processV2 import processCamera, processImage
-import sys
-import cv2
-import numpy as np
 
 class VideoThread(QThread):
     change_pixmap_signal = pyqtSignal(np.ndarray)
@@ -35,10 +27,10 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()
         self.title= "Detect license plate"      
-        self.left= 10
-        self.top= 10
-        self.height= 720
-        self.width= 1280
+        self.left= WIN_LEFT
+        self.top= WIN_TOP
+        self.height= WIN_HEIGHT
+        self.width= WIN_WIDTH
         self.initUI()
 
     def initUI(self):
@@ -63,8 +55,8 @@ class App(QMainWindow):
 class UIWidget(QWidget):
     def __init__(self, parent=None):
         super(QWidget, self).__init__(parent)
-        self.disply_width = 600
-        self.display_height = 700
+        self.disply_width = SIZE_CAM_WIDTH
+        self.display_height = SIZE_CAM_HEIGHT
         layout= QHBoxLayout(self)
         # Initialize tab screen
         self.tabs = QtWidgets.QTabWidget()
@@ -137,7 +129,6 @@ class UIWidget(QWidget):
         self.setLayout(layout)
 
     def openCamera_IN(self):
-        print("1st")
         self.thread = VideoThread()
         # connect its signal to the update_image slot
         self.thread.change_pixmap_signal.connect(self.update_image_IN)
