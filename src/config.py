@@ -16,11 +16,11 @@ from PIL import Image, ImageFont, ImageDraw
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 
-YOLO_CONFIG = r"src/yolo/yolov4-tiny-custom.cfg"
-YOLO_WEIGHT = r"src/yolo/yolov4-tiny-custom_last.weights"
-YOLO_CLASSES = r"src/yolo/obj.names"
+YOLO_CONFIG = r"Source_rasp/src/yolo/yolov4-tiny-custom.cfg"
+YOLO_WEIGHT = r"Source_rasp/src/yolo/yolov4-tiny-custom_last.weights"
+YOLO_CLASSES = r"Source_rasp/src/yolo/obj.names"
 
-MODEL = r"Model\my_model.h5"
+MODEL = r"Model/my_model.h5"
 
 LABEL_DATA = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C','D', 'E', 'F', 'G', 'H', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z', 'None']
 
@@ -40,4 +40,4 @@ WIDTH_YOLO = 300
 HEIGHT_YOLO = 200
 SIZE_YOLO = (WIDTH_YOLO, HEIGHT_YOLO)
 
-PORT_USB = "COM5"
+PORT_USB = "/dev/ttyUSB0"

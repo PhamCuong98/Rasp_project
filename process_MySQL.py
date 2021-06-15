@@ -1,3 +1,4 @@
+from src.config import *
 import mysql.connector
 import serial
 
